@@ -1,0 +1,36 @@
+@page "/counter"
+@using AltairCA.Blazor.WebAssembly.Cookie
+@using Newtonsoft.Json
+@inject IAltairCABlazorCookieUtil _cookieUtil;
+<PageTitle>Counter</PageTitle>
+
+<h1>Counter</h1>
+
+<p role="status">Current count: @currentCount</p>
+<p>@Content</p>
+<p>@JsonConvert.SerializeObject(@ContentObj)</p>
+<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+
+@code {
+    private int currentCount = 0;
+    private string Content = "";
+    private object ContentObj = null;
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        await _cookieUtil.SetValueAsync("c", "huththoo ooooo");
+        await _cookieUtil.SetValueAsync("d", new
+        {
+            hello = "hello world"
+        });
+        
+    }
+
+    private async Task IncrementCount()
+    {
+        currentCount++;
+        Content = await _cookieUtil.GetValueAsync("c");
+        ContentObj = await _cookieUtil.GetValueAsync<object>("d");
+    }
+
+}
